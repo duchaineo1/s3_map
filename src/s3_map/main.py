@@ -1,6 +1,6 @@
 from tabulate import tabulate
 import argparse
-from s3_lister import get_bucket, list_buckets
+from s3_map.s3_lister import get_bucket, list_buckets
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--bucket", help="name of the bucket to fetch", type=str)
