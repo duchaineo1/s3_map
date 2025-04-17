@@ -1,0 +1,50 @@
+name: Docker Build
+
+on:
+  #pull_request:
+  push:
+   branches:
+      - publish-test
+    #types: [closed]
+
+jobs:
+  github-packages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get new tag
+        if: github.ref != 'refs/heads/main'
+        id: new_tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+          LATEST_TAG=${LATEST_TAG:-0.0.0}
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
+
+          NEW_PATCH=$((PATCH + 1))
+          NEW_TAG="${MAJOR}.${MINOR}.${NEW_PATCH}"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Push new tag
+        if: github.ref != 'refs/heads/main'
+        run: |
+          NEW_TAG=${{ steps.new_tag.outputs.NEW_TAG }}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag "$NEW_TAG"
+          git push origin "$NEW_TAG"
+
+      - name: Create a GitHub release
+        if: github.ref != 'refs/heads/main'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
