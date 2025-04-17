@@ -17,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get new tag
-        if: github.ref != 'refs/heads/main'
         id: new_tag
         env:
           GH_TOKEN: ${{ github.token }}
@@ -32,7 +31,6 @@ jobs:
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
 
       - name: Push new tag
-        if: github.ref != 'refs/heads/main'
         run: |
           NEW_TAG=${{ steps.new_tag.outputs.NEW_TAG }}
           git config user.name github-actions
@@ -45,7 +43,6 @@ jobs:
           git push origin HEAD
 
       - name: Create a GitHub release
-        if: github.ref != 'refs/heads/main'
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.new_tag.outputs.NEW_TAG }}
