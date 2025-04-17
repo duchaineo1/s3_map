@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "s3_map"
-version = "1.0.2"
+version = "1.0.3"
 description = ""
 authors = ["Olivier Duchaine <olivier.duchaine@gmail.com>"]
 
