@@ -6,6 +6,7 @@ from mypy_boto3_s3 import S3Client
 from argparse import Namespace
 import concurrent.futures
 
+
 AWS_S3_GB_COST = 0.023
 
 
@@ -64,6 +65,7 @@ def get_bucket(name: str, unit: str, storageclass=None):
 
     try:
         creation_date = s3.Bucket(name).creation_date
+        bucket_region = get_bucket_region(name, client)
     except Exception as e:
         print(f"Error getting bucket creation date: {e}")
         creation_date = None
@@ -112,15 +114,16 @@ def get_bucket(name: str, unit: str, storageclass=None):
         "total_size": f"{ formatted_size } {unit}",
         "last_modified": last_modified,
         "cost": cost,
+        "region": bucket_region,
     }
 
 
-def validate_region(region: str, bucket_name, client):
+def get_bucket_region(bucket_name, client):
     bucket_region = (
         client.get_bucket_location(Bucket=bucket_name)["LocationConstraint"]
         or "us-east-1"
     )
-    return region == bucket_region
+    return bucket_region
 
 
 def list_buckets(args: Namespace):
@@ -129,8 +132,6 @@ def list_buckets(args: Namespace):
     all_buckets_info = []
     for bucket in client.list_buckets()["Buckets"]:
         bucket_name = bucket["Name"]
-        if not validate_region(args.region, bucket_name, client):
-            continue
         if bucket_info := get_bucket(bucket_name, args.unit):
             all_buckets_info.append(bucket_info)
 

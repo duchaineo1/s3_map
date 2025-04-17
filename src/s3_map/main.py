@@ -7,7 +7,7 @@ parser.add_argument("-b", "--bucket", help="name of the bucket to fetch", type=s
 parser.add_argument(
     "-r",
     "--region",
-    help="display only buckets in specified region, ignored if --bucket or -b is specified",
+    help="display buckets grouped by region",
     type=str,
 )
 parser.add_argument(
@@ -29,13 +29,16 @@ parser.add_argument(
         "STANDARD_IA",
     ],
     default=None,
-    # https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-inventory.html#storage-inventory-contents:~:text=API%20Reference.-,Storage%20class,-%E2%80%93%20The%20storage%20class
 )
 args = parser.parse_args()
 
 
 def print_as_table(bucket_information):
-    print(tabulate(bucket_information, headers="keys"))
+    if args.region:
+        sorted_buckets = sorted(bucket_information, key=lambda x: x["region"])
+        print(tabulate(sorted_buckets, headers="keys"))
+    else:
+        print(tabulate(bucket_information, headers="keys"))
 
 
 def main():
