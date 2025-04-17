@@ -8,7 +8,7 @@ on:
     #types: [closed]
 
 jobs:
-  github-packages:
+  create-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -53,6 +53,8 @@ jobs:
           name: Release ${{ steps.new_tag.outputs.NEW_TAG }}
           body: ${{ steps.tag_version.outputs.changelog }}
   release-build:
+    needs:
+      - create-release
     runs-on: ubuntu-latest
 
     steps:
