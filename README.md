@@ -15,7 +15,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 export AWS_DEFAULT_REGION=us-west-2
 PACKAGE_LOCATION=$(pip show s3-map | grep Location | awk '{print $2}')
-cd "$PACKAGE_LOCATION/s3-map"
+cd "$PACKAGE_LOCATION/s3_map"
 python3 ./main.py --help
 ```
 
