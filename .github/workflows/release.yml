@@ -1,11 +1,10 @@
 name: Docker Build
 
 on:
-  #pull_request:
-  push:
+  pull_request:
    branches:
-      - publish-test
-    #types: [closed]
+      - main
+   types: [closed]
 
 jobs:
   create-release:
