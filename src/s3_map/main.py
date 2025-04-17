@@ -8,7 +8,7 @@ parser.add_argument(
     "-r",
     "--region",
     help="display buckets grouped by region",
-    type=str,
+    action="store_true",
 )
 parser.add_argument(
     "-u",
