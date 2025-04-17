@@ -2,6 +2,23 @@
 
 A CLI tool to inspect AWS S3 buckets and gather detailed metrics including size, number of files, and estimated cost.
 
+## Installation
+
+```bash
+pip install s3-map
+```
+
+## Usage
+
+```bash
+export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+export AWS_DEFAULT_REGION=us-west-2
+PACKAGE_LOCATION=$(pip show s3-map | grep Location | awk '{print $2}')
+cd "$PACKAGE_LOCATION/s3-map"
+python3 ./main.py --help
+```
+
 ## CLI Arguments
 
 | Short | Long           | Description                                                                                       | Type   | Choices                                        | Default |
@@ -20,6 +37,7 @@ For each bucket, the tool returns the following information:
 - **Total size of files**
 - **Last modified date of the most recent file**
 - **Estimated storage cost**
+- **region**
 
 ## Supported Options
 
@@ -36,7 +54,3 @@ For each bucket, the tool returns the following information:
   - `STANDARD`
   - `STANDARD_IA`
   - `REDUCED_REDUNDANCY`
-
-You may also receive:
-- Stats on objects by storage class (e.g., how many objects per class in each bucket)
-- Filtered output that reflects only the selected storage class
